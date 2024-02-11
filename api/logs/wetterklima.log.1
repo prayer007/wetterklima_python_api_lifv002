@@ -1,0 +1,122 @@
+2024-02-10 11:48:04,208 ERROR: Error during password verification: Invalid hash method 'sha256'. [in /root/apis/wetterklima/api/routes.py:53]
+2024-02-10 11:48:34,910 ERROR: Error during password verification: Invalid hash method 'sha256'. [in /root/apis/wetterklima/api/routes.py:53]
+2024-02-10 12:01:22,445 ERROR: Error during password verification: Invalid hash method 'sha256'. [in /root/apis/wetterklima/api/routes.py:51]
+2024-02-10 12:02:27,958 ERROR: Error during password verification: Invalid hash method 'sha256'. [in /root/apis/wetterklima/api/routes.py:51]
+2024-02-10 12:02:40,212 ERROR: Error during password verification: Invalid hash method 'sha256'. [in /root/apis/wetterklima/api/routes.py:51]
+2024-02-10 12:03:10,231 ERROR: Exception on /login [POST] [in /root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py:828]
+Traceback (most recent call last):
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 1463, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 873, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 892, in finalize_request
+    response = self.make_response(rv)
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 1183, in make_response
+    rv = self.json.response(rv)
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/json/provider.py", line 214, in response
+    f"{self.dumps(obj, **dump_args)}\n", mimetype=self.mimetype
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/json/provider.py", line 179, in dumps
+    return json.dumps(obj, **kwargs)
+  File "/usr/lib/python3.8/json/__init__.py", line 234, in dumps
+    return cls(
+  File "/usr/lib/python3.8/json/encoder.py", line 199, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/usr/lib/python3.8/json/encoder.py", line 257, in iterencode
+    return _iterencode(o, 0)
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/json/provider.py", line 119, in _default
+    return str(o.__html__())
+TypeError: 'NoneType' object is not callable
+2024-02-10 12:03:10,233 ERROR: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in /root/apis/wetterklima/api/routes.py:26]
+2024-02-10 12:03:22,330 ERROR: Exception on /login [POST] [in /root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py:828]
+Traceback (most recent call last):
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 1463, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 873, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 892, in finalize_request
+    response = self.make_response(rv)
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 1183, in make_response
+    rv = self.json.response(rv)
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/json/provider.py", line 214, in response
+    f"{self.dumps(obj, **dump_args)}\n", mimetype=self.mimetype
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/json/provider.py", line 179, in dumps
+    return json.dumps(obj, **kwargs)
+  File "/usr/lib/python3.8/json/__init__.py", line 234, in dumps
+    return cls(
+  File "/usr/lib/python3.8/json/encoder.py", line 199, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/usr/lib/python3.8/json/encoder.py", line 257, in iterencode
+    return _iterencode(o, 0)
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/json/provider.py", line 119, in _default
+    return str(o.__html__())
+TypeError: 'NoneType' object is not callable
+2024-02-10 12:03:22,331 ERROR: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in /root/apis/wetterklima/api/routes.py:26]
+2024-02-10 12:26:10,071 ERROR: Error during password verification: Invalid hash method 'sha256'. [in /root/apis/wetterklima/api/routes.py:52]
+2024-02-10 12:29:36,181 ERROR: Exception on /login [GET] [in /root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py:828]
+Traceback (most recent call last):
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 1463, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 872, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 870, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 855, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+  File "/root/apis/wetterklima/api/routes.py", line 56, in login_user
+    token = jwt.encode({'public_id': user.public_id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=exp)}, app.config['SECRET_KEY'])
+AttributeError: module 'jwt' has no attribute 'encode'
+2024-02-10 12:29:36,181 ERROR: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in /root/apis/wetterklima/api/routes.py:26]
+2024-02-10 12:43:40,567 ERROR: Exception on /gridTimeseries [POST] [in /root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py:828]
+Traceback (most recent call last):
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 1463, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 872, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 870, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 855, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+  File "/root/apis/wetterklima/api/api_utils.py", line 47, in decorator
+    return f(*args, **kwargs)
+  File "/root/apis/wetterklima/api/routes.py", line 88, in getGridTimeseries
+    return jsonify(timeseries_final)
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/json/__init__.py", line 170, in jsonify
+    return current_app.json.response(*args, **kwargs)  # type: ignore[return-value]
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/json/provider.py", line 214, in response
+    f"{self.dumps(obj, **dump_args)}\n", mimetype=self.mimetype
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/json/provider.py", line 179, in dumps
+    return json.dumps(obj, **kwargs)
+  File "/usr/lib/python3.8/json/__init__.py", line 234, in dumps
+    return cls(
+  File "/usr/lib/python3.8/json/encoder.py", line 199, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/usr/lib/python3.8/json/encoder.py", line 257, in iterencode
+    return _iterencode(o, 0)
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/json/provider.py", line 121, in _default
+    raise TypeError(f"Object of type {type(o).__name__} is not JSON serializable")
+TypeError: Object of type float32 is not JSON serializable
+2024-02-10 12:43:40,571 ERROR: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in /root/apis/wetterklima/api/routes.py:26]
+2024-02-10 12:44:51,309 ERROR: Exception on /gridTimeseries [POST] [in /root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py:828]
+Traceback (most recent call last):
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 1463, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 873, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 892, in finalize_request
+    response = self.make_response(rv)
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 1183, in make_response
+    rv = self.json.response(rv)
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/json/provider.py", line 214, in response
+    f"{self.dumps(obj, **dump_args)}\n", mimetype=self.mimetype
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/json/provider.py", line 179, in dumps
+    return json.dumps(obj, **kwargs)
+  File "/usr/lib/python3.8/json/__init__.py", line 234, in dumps
+    return cls(
+  File "/usr/lib/python3.8/json/encoder.py", line 199, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/usr/lib/python3.8/json/encoder.py", line 257, in iterencode
+    return _iterencode(o, 0)
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/json/provider.py", line 121, in _default
+    raise TypeError(f"Object of type {type(o).__name__} is not JSON serializable")
+TypeError: Object of type float32 is not JSON serializable
+2024-02-10 12:44:51,310 ERROR: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in /root/apis/wetterklima/api/routes.py:26]
