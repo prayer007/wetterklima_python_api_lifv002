@@ -6,6 +6,7 @@ import time
 import re
 from datetime import datetime
 import numpy as np
+import ast
 
 import processors
 
@@ -205,7 +206,7 @@ def get_timeseries_from_dataset(dataset: str, variable: str, lat: float, lng: fl
     return results_processed_sorted
 
 
-def calculate_stats_for_timeseries(data):
+def calculate_stats_for_timeseries(df):
     """
     Calculates mean, minimum, and maximum values for the entire 
     period and for two specific climate reference periods: 
@@ -221,12 +222,11 @@ def calculate_stats_for_timeseries(data):
         and the mean, min, max for each reference period, with datetimes
         formatted as strings.
     """
-    # Convert the list of tuples into a DataFrame
-    df = pd.DataFrame(data, columns=['datetime', 'value'])
-    
+
     # Convert datetime to string
-    df['datetime'] = df['datetime'].apply(lambda x: x.strftime("%Y-%m-%d %H:%M:%S"))
-    
+    if pd.api.types.is_datetime64_any_dtype(df['datetime']):
+        df['datetime'] = df['datetime'].apply(lambda x: x.strftime("%Y-%m-%d %H:%M:%S"))
+        
     # Calculate overall statistics
     overall_mean = df['value'].mean()
     overall_min = df.loc[df['value'].idxmin()].values.tolist()
@@ -286,7 +286,18 @@ def convert_timeseries_tuple_to_dict(data):
 def create_timeseries_object(timeseries):
     
     timeseries_stats = calculate_stats_for_timeseries(timeseries)
-    timeseries_values = convert_timeseries_tuple_to_dict(timeseries)
+    timeseries_values = {
+        'dates': list(timeseries['datetime'].values),
+        'values': list(timeseries['value'].values)
+    }
+    
+
+    for key in ['idr', 'iqr']:
+        timeseries_stats[key] = {
+            'min': list([ast.literal_eval(val)[0] for val in timeseries[key].values]),
+            'max': list([ast.literal_eval(val)[1] for val in timeseries[key].values]),
+            'mean': np.mean([ast.literal_eval(val)[0] for val in timeseries[key].values])
+        }
 
     obj = {
            'timeseries': timeseries_values,

@@ -6,11 +6,7 @@ host = 'https://test.wedda.at'
 
 #%% test login auth
 
-req = requests.get(f'{host}/login', auth=('wetterklima_app', 'dfdjkd739dKJouqb'))
-token = req.json()["token"]
-
 headers = {
-    "x-access-token": token,
     "Content-type":"application/json; charset=utf-8"
 }
 
@@ -35,4 +31,6 @@ x = requests.post(f'{host}/gridTimeseries', data = json.dumps(params), headers =
 if x.status_code == 200:
     js = x.json()
     print("Timeseries Raster value test OK: ",js)
+else:
+    print(f"ERROR: {x.status_code}")
 

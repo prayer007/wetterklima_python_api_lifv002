@@ -2,11 +2,14 @@ from flask import jsonify, request, make_response
 from werkzeug.security import check_password_hash
 import jwt
 import datetime
+
 import api_utils
 import utils
 from app import app
 from db_models import Users
+import pandas as pd
 
+from processors import BaseGeoTIFFProcessor
 
 import logging
 from logging.handlers import RotatingFileHandler
@@ -19,6 +22,9 @@ if not app.debug:
     file_handler.setLevel(logging.INFO)
     app.logger.addHandler(file_handler)
     app.logger.setLevel(logging.INFO)
+
+
+GSA_DATAHUB_ROOT = "/home/shared/CRM/11_gsa_datahub/"
 
 
 @app.errorhandler(500)
@@ -71,7 +77,6 @@ def getTest():
 
 
 @app.route('/gridTimeseries', methods=['POST'])
-@api_utils.token_required
 def getGridTimeseries():
     if request.method == 'POST':
         
@@ -82,10 +87,27 @@ def getGridTimeseries():
         lat = request_data['lat']
         lng = request_data['lng']
         
+        # Extract altitude from DEM
+        geotiff_processor = BaseGeoTIFFProcessor(GSA_DATAHUB_ROOT)
+        dem_fp = f"{GSA_DATAHUB_ROOT}/dem/output_COP90_31287.tif"
+        altitude = geotiff_processor.extract_value_from_geotiff((dem_fp, lat, lng))
+        
+        # Extract timeseries and statistics
         timeseries = utils.get_timeseries_from_dataset(dataset, variable, lat, lng)
         
-        if timeseries:
-            return utils.convert_float32(utils.create_timeseries_object(timeseries))
+        idr_iqr = pd.read_csv(f"{GSA_DATAHUB_ROOT}/statistics/{dataset}/{variable}/geotiff_metrics_timeseries.csv")
+        idr_iqr['datetime'] = pd.to_datetime(idr_iqr['datetime'])
+        
+        timeseries_df = pd.DataFrame(timeseries, columns=['datetime', 'value'])
+        timeseries = timeseries_df.merge(idr_iqr, how = 'left', on = 'datetime')
+        
+        timeseries_with_stats = utils.create_timeseries_object(timeseries)
+        
+        timeseries_with_stats['stats']['altitude'] = altitude[-1]
+        
+        if timeseries_with_stats:
+            return utils.convert_float32(timeseries_with_stats)
         else:
             return make_response('', 204)
+    
     
