@@ -292,12 +292,13 @@ def create_timeseries_object(timeseries):
     }
     
 
-    for key in ['idr', 'iqr']:
-        timeseries_stats[key] = {
-            'min': list([ast.literal_eval(val)[0] for val in timeseries[key].values]),
-            'max': list([ast.literal_eval(val)[1] for val in timeseries[key].values]),
-            'mean': np.mean([ast.literal_eval(val)[0] for val in timeseries[key].values])
-        }
+    for suffix in ['full', 'valley', 'mountain']:
+        for key in [f'idr_{suffix}', f'iqr_{suffix}', f'minmax_{suffix}']:
+            timeseries_stats[key] = {
+                'min': list([ast.literal_eval(val)[0] for val in timeseries[key].values]),
+                'max': list([ast.literal_eval(val)[1] for val in timeseries[key].values]),
+                'mean': np.mean([ast.literal_eval(val)[0] for val in timeseries[key].values])
+            }
 
     obj = {
            'timeseries': timeseries_values,
