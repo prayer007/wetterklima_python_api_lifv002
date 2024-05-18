@@ -13,17 +13,42 @@ import asyncio
 class BaseGeoTIFFProcessor:
     """Base class for processing GeoTIFF files, encapsulating common functionalities."""
 
-    def __init__(self, dataset_root: str):
-        """Initializes the processor with the dataset root directory."""
+    def __init__(self, dataset_root: str, month: int = None, day: int = None):
+        """Initializes the processor with the dataset root directory and optional filtering by month and/or day."""
         self.dataset_root = dataset_root
+        self.month = month
+        self.day = day
         self.transformer = Transformer.from_crs("epsg:4326", "epsg:31287", always_xy=True)
 
-    @staticmethod
-    def list_files_with_extension(directory: str, extension: str) -> list:
-        """Lists all files in a directory with a specific extension."""
+
+    def list_files_with_extension(self, directory: str, extension: str) -> list:
+        """Lists all files in a directory with a specific extension, optionally filtering by month and/or day."""
         directory = os.path.join(directory, '')
         pattern = f"{directory}*{extension}"
-        return glob.glob(pattern)
+        all_files = glob.glob(pattern)
+        
+        if self.month is None and self.day is None:
+            return all_files
+        
+        filtered_files = []
+        for file_path in all_files:
+            filename = os.path.basename(file_path)
+            date_part = filename.split('.')[-2].split("_")[-1]
+            file_month = int(date_part[4:6])
+            file_day = int(date_part[6:8])
+            
+            if self.month and self.day:
+                if self.month == file_month and self.day == file_day:
+                    filtered_files.append(file_path)
+            elif self.month:
+                if self.month == file_month:
+                    filtered_files.append(file_path)
+            elif self.day:
+                if self.day == file_day:
+                    filtered_files.append(file_path)
+                    
+        return filtered_files
+
 
     def extract_value_from_geotiff(self, args):
         """Extracts a value from a GeoTIFF file at specified latitude and longitude."""
@@ -40,18 +65,14 @@ class BaseGeoTIFFProcessor:
 class GeoTIFFMultiprocessingProcessor(BaseGeoTIFFProcessor):
     """Processes GeoTIFF files using multiprocessing to efficiently extract geographic data."""
 
-    def __init__(self, dataset_root: str, cores: int = 4):
-        """Initialize the multiprocessing processor with the specified dataset root directory and number of cores."""
-        super().__init__(dataset_root)
+    def __init__(self, dataset_root: str, month: int = None, day: int = None, cores: int = 4):
+        super().__init__(dataset_root, month, day)
         self.cores = cores
 
     def process_geotiffs(self, extension: str, lat: float, lng: float) -> list:
-        """Process GeoTIFF files in the dataset directory using multiprocessing."""
         file_paths = self.list_files_with_extension(self.dataset_root, extension)
         tasks = [(path, lat, lng) for path in file_paths]
-        # Use a multiprocessing Pool to execute the tasks in parallel
         with Pool(processes=self.cores) as pool:
-            # The map function automatically handles distributing tasks across the pool
             results = pool.map(self.extract_value_from_geotiff, tasks)
         return results
 
@@ -59,12 +80,11 @@ class GeoTIFFMultiprocessingProcessor(BaseGeoTIFFProcessor):
 class GeoTIFFThreadingProcessor(BaseGeoTIFFProcessor):
     """Processes GeoTIFF files using threading."""
 
-    def __init__(self, dataset_root: str, threads: int = 4):
-        super().__init__(dataset_root)
+    def __init__(self, dataset_root: str, month: int = None, day: int = None, threads: int = 4):
+        super().__init__(dataset_root, month, day)
         self.threads = threads
 
     def process_geotiffs(self, extension: str, lat: float, lng: float) -> list:
-        """Processes GeoTIFF files using threading."""
         file_paths = self.list_files_with_extension(self.dataset_root, extension)
         tasks = [(path, lat, lng) for path in file_paths]
         with ThreadPoolExecutor(max_workers=self.threads) as executor:
@@ -73,30 +93,25 @@ class GeoTIFFThreadingProcessor(BaseGeoTIFFProcessor):
     
     
 class AsyncGeoTIFFProcessor(BaseGeoTIFFProcessor):
+    
     """Processes GeoTIFF files using asyncio for asynchronous I/O operations."""
 
-    def __init__(self, dataset_root: str, max_workers: int = 4):
-        """Initialize the async processor with the specified dataset root directory and max workers."""
-        super().__init__(dataset_root)
+    def __init__(self, dataset_root: str, month: int = None, day: int = None, max_workers: int = 4):
+        super().__init__(dataset_root, month, day)
         self.max_workers = max_workers
 
     async def async_extract_value_from_geotiff(self, args):
-        """An async wrapper around the `extract_value_from_geotiff` method."""
         loop = asyncio.get_event_loop()
-        # Use run_in_executor to run the synchronous extract_value_from_geotiff method in a thread pool
         result = await loop.run_in_executor(None, self.extract_value_from_geotiff, args)
         return result
 
     async def process_geotiffs_async(self, extension: str, lat: float, lng: float) -> list:
-        """Asynchronously process GeoTIFF files using asyncio."""
         file_paths = self.list_files_with_extension(self.dataset_root, extension)
         tasks = [(path, lat, lng) for path in file_paths]
         async_tasks = [self.async_extract_value_from_geotiff(task) for task in tasks]
-        
-        # Gather all tasks and run them concurrently
         results = await asyncio.gather(*async_tasks)
         return results
 
     def process_geotiffs(self, extension: str, lat: float, lng: float) -> list:
-        """A synchronous wrapper to run the async process method."""
         return asyncio.run(self.process_geotiffs_async(extension, lat, lng))
+

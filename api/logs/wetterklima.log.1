@@ -1,4 +1,4 @@
-2024-03-03 11:52:45,943 ERROR: Exception on /gridTimeseries [POST] [in /root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py:828]
+2024-05-11 09:08:45,244 ERROR: Exception on /gridTimeseries [POST] [in /root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py:828]
 Traceback (most recent call last):
   File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 1463, in wsgi_app
     response = self.full_dispatch_request()
@@ -8,27 +8,20 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 855, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
-  File "/root/apis/wetterklima/api/routes.py", line 104, in getGridTimeseries
+  File "/root/apis/wetterklima/api/routes.py", line 124, in getGridTimeseries
     timeseries_with_stats = utils.create_timeseries_object(timeseries)
-  File "/root/apis/wetterklima/utils.py", line 298, in create_timeseries_object
-    'min': list([ast.literal_eval(val)[0] for val in timeseries[key].values]),
-  File "/root/apis/wetterklima/utils.py", line 298, in <listcomp>
-    'min': list([ast.literal_eval(val)[0] for val in timeseries[key].values]),
-  File "/usr/lib/python3.8/ast.py", line 99, in literal_eval
-    return _convert(node_or_string)
-  File "/usr/lib/python3.8/ast.py", line 82, in _convert
-    return list(map(_convert, node.elts))
-  File "/usr/lib/python3.8/ast.py", line 98, in _convert
-    return _convert_signed_num(node)
-  File "/usr/lib/python3.8/ast.py", line 75, in _convert_signed_num
-    return _convert_num(node)
-  File "/usr/lib/python3.8/ast.py", line 66, in _convert_num
-    _raise_malformed_node(node)
-  File "/usr/lib/python3.8/ast.py", line 63, in _raise_malformed_node
-    raise ValueError(f'malformed node or string: {node!r}')
-ValueError: malformed node or string: <_ast.Name object at 0x7fee5c690a30>
-2024-03-03 11:52:45,951 ERROR: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in /root/apis/wetterklima/api/routes.py:32]
-2024-03-03 11:52:51,370 ERROR: Exception on /gridTimeseries [POST] [in /root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py:828]
+  File "/root/apis/wetterklima/utils.py", line 327, in create_timeseries_object
+  File "/root/apis/wetterklima/utils.py", line 264, in calculate_stats_for_timeseries
+    df['datetime'] = df['datetime'].apply(lambda x: x.strftime("%Y-%m-%d %H:%M:%S"))
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/pandas/core/series.py", line 2460, in idxmin
+    i = self.argmin(axis, skipna, *args, **kwargs)  # type: ignore[arg-type]
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/pandas/core/base.py", line 742, in argmin
+    return nanops.nanargmin(  # type: ignore[return-value]
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/pandas/core/nanops.py", line 91, in _f
+    raise TypeError(
+TypeError: reduction operation 'argmin' not allowed for this dtype
+2024-05-11 09:08:45,250 ERROR: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in /root/apis/wetterklima/api/routes.py:33]
+2024-05-11 18:32:47,611 ERROR: Exception on /gridTimeseries [POST] [in /root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py:828]
 Traceback (most recent call last):
   File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 1463, in wsgi_app
     response = self.full_dispatch_request()
@@ -38,27 +31,20 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 855, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
-  File "/root/apis/wetterklima/api/routes.py", line 104, in getGridTimeseries
+  File "/root/apis/wetterklima/api/routes.py", line 124, in getGridTimeseries
     timeseries_with_stats = utils.create_timeseries_object(timeseries)
-  File "/root/apis/wetterklima/utils.py", line 298, in create_timeseries_object
-    'min': list([ast.literal_eval(val)[0] for val in timeseries[key].values]),
-  File "/root/apis/wetterklima/utils.py", line 298, in <listcomp>
-    'min': list([ast.literal_eval(val)[0] for val in timeseries[key].values]),
-  File "/usr/lib/python3.8/ast.py", line 99, in literal_eval
-    return _convert(node_or_string)
-  File "/usr/lib/python3.8/ast.py", line 82, in _convert
-    return list(map(_convert, node.elts))
-  File "/usr/lib/python3.8/ast.py", line 98, in _convert
-    return _convert_signed_num(node)
-  File "/usr/lib/python3.8/ast.py", line 75, in _convert_signed_num
-    return _convert_num(node)
-  File "/usr/lib/python3.8/ast.py", line 66, in _convert_num
-    _raise_malformed_node(node)
-  File "/usr/lib/python3.8/ast.py", line 63, in _raise_malformed_node
-    raise ValueError(f'malformed node or string: {node!r}')
-ValueError: malformed node or string: <_ast.Name object at 0x7fee5c6954c0>
-2024-03-03 11:52:51,371 ERROR: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in /root/apis/wetterklima/api/routes.py:32]
-2024-03-03 11:53:08,913 ERROR: Exception on /gridTimeseries [POST] [in /root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py:828]
+  File "/root/apis/wetterklima/utils.py", line 327, in create_timeseries_object
+  File "/root/apis/wetterklima/utils.py", line 264, in calculate_stats_for_timeseries
+    df['datetime'] = df['datetime'].apply(lambda x: x.strftime("%Y-%m-%d %H:%M:%S"))
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/pandas/core/series.py", line 2460, in idxmin
+    i = self.argmin(axis, skipna, *args, **kwargs)  # type: ignore[arg-type]
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/pandas/core/base.py", line 742, in argmin
+    return nanops.nanargmin(  # type: ignore[return-value]
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/pandas/core/nanops.py", line 91, in _f
+    raise TypeError(
+TypeError: reduction operation 'argmin' not allowed for this dtype
+2024-05-11 18:32:47,613 ERROR: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in /root/apis/wetterklima/api/routes.py:33]
+2024-05-18 07:40:32,073 ERROR: Exception on /gridTimeseries [POST] [in /root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py:828]
 Traceback (most recent call last):
   File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 1463, in wsgi_app
     response = self.full_dispatch_request()
@@ -68,27 +54,11 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 855, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
-  File "/root/apis/wetterklima/api/routes.py", line 104, in getGridTimeseries
-    timeseries_with_stats = utils.create_timeseries_object(timeseries)
-  File "/root/apis/wetterklima/utils.py", line 298, in create_timeseries_object
-    'min': list([ast.literal_eval(val)[0] for val in timeseries[key].values]),
-  File "/root/apis/wetterklima/utils.py", line 298, in <listcomp>
-    'min': list([ast.literal_eval(val)[0] for val in timeseries[key].values]),
-  File "/usr/lib/python3.8/ast.py", line 99, in literal_eval
-    return _convert(node_or_string)
-  File "/usr/lib/python3.8/ast.py", line 82, in _convert
-    return list(map(_convert, node.elts))
-  File "/usr/lib/python3.8/ast.py", line 98, in _convert
-    return _convert_signed_num(node)
-  File "/usr/lib/python3.8/ast.py", line 75, in _convert_signed_num
-    return _convert_num(node)
-  File "/usr/lib/python3.8/ast.py", line 66, in _convert_num
-    _raise_malformed_node(node)
-  File "/usr/lib/python3.8/ast.py", line 63, in _raise_malformed_node
-    raise ValueError(f'malformed node or string: {node!r}')
-ValueError: malformed node or string: <_ast.Name object at 0x7fee5c69cd30>
-2024-03-03 11:53:08,914 ERROR: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in /root/apis/wetterklima/api/routes.py:32]
-2024-03-03 11:53:11,565 ERROR: Exception on /gridTimeseries [POST] [in /root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py:828]
+  File "/root/apis/wetterklima/api/routes.py", line 99, in getGridTimeseries
+    layerDate = request_data['layerDate']
+KeyError: 'layerDate'
+2024-05-18 07:40:32,077 ERROR: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in /root/apis/wetterklima/api/routes.py:33]
+2024-05-18 07:40:38,891 ERROR: Exception on /gridTimeseries [POST] [in /root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py:828]
 Traceback (most recent call last):
   File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 1463, in wsgi_app
     response = self.full_dispatch_request()
@@ -98,23 +68,21 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 855, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
-  File "/root/apis/wetterklima/api/routes.py", line 104, in getGridTimeseries
-    timeseries_with_stats = utils.create_timeseries_object(timeseries)
-  File "/root/apis/wetterklima/utils.py", line 298, in create_timeseries_object
-    'min': list([ast.literal_eval(val)[0] for val in timeseries[key].values]),
-  File "/root/apis/wetterklima/utils.py", line 298, in <listcomp>
-    'min': list([ast.literal_eval(val)[0] for val in timeseries[key].values]),
-  File "/usr/lib/python3.8/ast.py", line 99, in literal_eval
-    return _convert(node_or_string)
-  File "/usr/lib/python3.8/ast.py", line 82, in _convert
-    return list(map(_convert, node.elts))
-  File "/usr/lib/python3.8/ast.py", line 98, in _convert
-    return _convert_signed_num(node)
-  File "/usr/lib/python3.8/ast.py", line 75, in _convert_signed_num
-    return _convert_num(node)
-  File "/usr/lib/python3.8/ast.py", line 66, in _convert_num
-    _raise_malformed_node(node)
-  File "/usr/lib/python3.8/ast.py", line 63, in _raise_malformed_node
-    raise ValueError(f'malformed node or string: {node!r}')
-ValueError: malformed node or string: <_ast.Name object at 0x7fee5c690400>
-2024-03-03 11:53:11,566 ERROR: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in /root/apis/wetterklima/api/routes.py:32]
+  File "/root/apis/wetterklima/api/routes.py", line 99, in getGridTimeseries
+    layerDate = request_data['layerDate']
+KeyError: 'layerDate'
+2024-05-18 07:40:38,892 ERROR: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in /root/apis/wetterklima/api/routes.py:33]
+2024-05-18 07:41:31,202 ERROR: Exception on /gridTimeseries [POST] [in /root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py:828]
+Traceback (most recent call last):
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 1463, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 872, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 870, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 855, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+  File "/root/apis/wetterklima/api/routes.py", line 99, in getGridTimeseries
+    layerDate = request_data['layerDate']
+KeyError: 'layerDate'
+2024-05-18 07:41:31,203 ERROR: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in /root/apis/wetterklima/api/routes.py:33]

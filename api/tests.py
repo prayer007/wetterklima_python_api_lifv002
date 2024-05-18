@@ -1,8 +1,9 @@
 import requests
 import json
+import datetime
 
 #%% Host
-host = 'https://test.wedda.at'
+host = 'http://143.224.185.119:5002'
 
 #%% test login auth
 
@@ -22,6 +23,7 @@ if x.status_code == 200:
 #%% get timeseries of raster values
 params={'dataset': 'spartacus-v2-1y-1km',
         'variable': 'TM',
+        'layerDate': '2022-12-12 00:00:00',
         'lat': 47,
         'lng': 15
         }

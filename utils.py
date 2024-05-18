@@ -7,10 +7,38 @@ import re
 from datetime import datetime
 import numpy as np
 import ast
+import rasterio
 
 import processors
 
 GSA_DATAHUB_ROOT = "/home/shared/CRM/11_gsa_datahub/"
+
+
+def get_raster_stats(raster_path):
+    """
+    Extract minimum, maximum, and mean statistics from a raster file.
+    
+    Parameters:
+    raster_path (str): Path to the raster file.
+    
+    Returns:
+    dict: A dictionary containing the minimum, maximum, and mean values of the raster data.
+    """
+    with rasterio.open(raster_path) as src:
+        data = src.read(1) 
+
+        if src.nodata is not None:
+            data = data[data != src.nodata]
+        
+        min_val = np.min(data)
+        max_val = np.max(data)
+        mean_val = np.mean(data)
+        
+        return {
+            'min': min_val,
+            'max': max_val,
+            'mean': mean_val
+        }
 
 
 def timeit(func):
@@ -31,6 +59,10 @@ def timeit(func):
         return result
     return wrapper
 
+
+def extract_date_category_from_dataset_name(ds_name: str) -> str:
+   return ds_name.split('-')[-2][1]
+    
 
 def convert_float32(data):
     """
@@ -155,7 +187,7 @@ def sort_tuple_array_by_datetime(array: list) -> list:
 
 
 @timeit
-def get_timeseries_from_dataset(dataset: str, variable: str, lat: float, lng: float) -> list:
+def get_timeseries_from_dataset(dataset: str, variable: str, lat: float, lng: float, month = None, day = None) -> list:
     """
     Retrieves a time series of values from a dataset of GeoTIFF files for 
     a specific variable at given latitude and longitude coordinates.
@@ -171,7 +203,7 @@ def get_timeseries_from_dataset(dataset: str, variable: str, lat: float, lng: fl
         variable (str): The name of the variable directory within the dataset directory.
         lat (float): The latitude coordinate for which to extract the variable values.
         lng (float): The longitude coordinate for which to extract the variable values.
-    
+   
     Returns:
         list of tuples: A sorted list where each tuple contains a datetime object
         (representing the date and time extracted from the filename) and the extracted 
@@ -194,12 +226,17 @@ def get_timeseries_from_dataset(dataset: str, variable: str, lat: float, lng: fl
     
     data_dir = f"{GSA_DATAHUB_ROOT}/{dataset}/{variable}"
 
-    processor = processors.GeoTIFFThreadingProcessor(data_dir, 4)
+    processor = processors.GeoTIFFThreadingProcessor(data_dir, month = month, day = day, threads = 4)
     results = processor.process_geotiffs('.tif', lat, lng)
     
     if not all(res is None for res in results):
         results_processed = [(extract_datetime_from_filename(basename(res[0])),res[1]) for res in results]
         results_processed_sorted = sort_tuple_array_by_datetime(results_processed)
+        #TODO: add SA transformation here
+        if variable == 'SA':
+            if month is not None:
+                results_processed_sorted = [(date, duration / 3600 / 30) for date, duration in results_processed_sorted]
+            
     else:
         return None
         
@@ -231,6 +268,8 @@ def calculate_stats_for_timeseries(df):
     overall_mean = df['value'].mean()
     overall_min = df.loc[df['value'].idxmin()].values.tolist()
     overall_max = df.loc[df['value'].idxmax()].values.tolist()
+    overall_top5 = df.sort_values(by='value', ascending=False)[:5] 
+    overall_bottom5 = df.sort_values(by='value', ascending=True)[:5] 
 
     # Define the climate reference periods
     period1_start = "1961-01-01 00:00:00"
@@ -255,9 +294,14 @@ def calculate_stats_for_timeseries(df):
 
     # Return the statistics as a dictionary
     return {
-        'overall': {'mean': overall_mean, 'min': format_result(overall_min), 'max': format_result(overall_max)},
-        '1961_1991': {'mean': period1_mean, 'min': format_result(period1_min), 'max': format_result(period1_max)},
-        '1991_2020': {'mean': period2_mean, 'min': format_result(period2_min), 'max': format_result(period2_max)}
+        'current_location_stats': {
+            'overall': {'mean': overall_mean, 'min': format_result(overall_min), 'max': format_result(overall_max),
+                        'top5': {'date': list(overall_top5['datetime'].values), 'value': list(overall_top5['value'].values)}, 
+                        'bottom5': {'date': list(overall_bottom5['datetime'].values), 'value': list(overall_bottom5['value'].values)}
+                        },
+            '1961_1991': {'mean': period1_mean, 'min': format_result(period1_min), 'max': format_result(period1_max)},
+            '1991_2020': {'mean': period2_mean, 'min': format_result(period2_min), 'max': format_result(period2_max)}
+        }
     }
 
 
@@ -291,7 +335,6 @@ def create_timeseries_object(timeseries):
         'values': list(timeseries['value'].values)
     }
     
-
     for suffix in ['full', 'valley', 'mountain']:
         for key in [f'idr_{suffix}', f'iqr_{suffix}', f'minmax_{suffix}']:
             timeseries_stats[key] = {

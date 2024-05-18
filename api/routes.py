@@ -2,6 +2,7 @@ from flask import jsonify, request, make_response
 from werkzeug.security import check_password_hash
 import jwt
 import datetime
+import os
 
 import api_utils
 import utils
@@ -78,36 +79,80 @@ def getTest():
 
 @app.route('/gridTimeseries', methods=['POST'])
 def getGridTimeseries():
-    if request.method == 'POST':
-        
-        request_data = request.get_json()
+    """
+    Get the grid timeseries based on the provided parameters.
 
-        dataset = request_data['dataset']
-        variable = request_data['variable']
-        lat = request_data['lat']
-        lng = request_data['lng']
-        
-        # Extract altitude from DEM
-        geotiff_processor = BaseGeoTIFFProcessor(GSA_DATAHUB_ROOT)
-        dem_fp = f"{GSA_DATAHUB_ROOT}/dem/output_COP90_31287.tif"
-        altitude = geotiff_processor.extract_value_from_geotiff((dem_fp, lat, lng))
-        
-        # Extract timeseries and statistics
+    Parameters:
+    - dataset (str): The dataset identifier, e.g., 'spartacus-v2-1y-1km'.
+    - variable (str): The variable of interest, e.g., 'TM'.
+    - layerDate (datetime): The date of the layer, in datetime string.
+    - lat (float): Latitude of the point of interest.
+    - lng (float): Longitude of the point of interest.
+
+    Returns:
+    - JSON response containing timeseries data with statistics and altitude if successful, or HTTP 204 response if no data is found.
+    """
+    request_data = request.get_json()
+
+    dataset = request_data['dataset']
+    variable = request_data['variable']
+    layerDate = request_data['layerDate']
+    lat = request_data['lat']
+    lng = request_data['lng']
+
+    layerDateCategory = utils.extract_date_category_from_dataset_name(dataset)
+    layerDateDt = pd.to_datetime(layerDate) + pd.Timedelta(hours=12)
+    
+    geotiff_processor = BaseGeoTIFFProcessor(GSA_DATAHUB_ROOT)
+    dem_fp = f"{GSA_DATAHUB_ROOT}/dem/output_COP90_31287.tif"
+    altitude = geotiff_processor.extract_value_from_geotiff((dem_fp, lat, lng))
+    
+    if layerDateCategory == 'd':
+        timeseries = utils.get_timeseries_from_dataset(dataset, variable, lat, lng, day=layerDateDt.day)
+    elif layerDateCategory == 'm':
+        timeseries = utils.get_timeseries_from_dataset(dataset, variable, lat, lng, month=layerDateDt.month)
+    else:
         timeseries = utils.get_timeseries_from_dataset(dataset, variable, lat, lng)
-        
-        idr_iqr = pd.read_csv(f"{GSA_DATAHUB_ROOT}/statistics/{dataset}/{variable}/geotiff_metrics_timeseries.csv")
-        idr_iqr['datetime'] = pd.to_datetime(idr_iqr['datetime'])
-        
-        timeseries_df = pd.DataFrame(timeseries, columns=['datetime', 'value'])
-        timeseries = timeseries_df.merge(idr_iqr, how = 'left', on = 'datetime')
-        
-        timeseries_with_stats = utils.create_timeseries_object(timeseries)
-        
-        timeseries_with_stats['stats']['altitude'] = altitude[-1]
-        
-        if timeseries_with_stats:
-            return utils.convert_float32(timeseries_with_stats)
-        else:
-            return make_response('', 204)
     
+    idr_iqr = pd.read_csv(f"{GSA_DATAHUB_ROOT}/statistics/{dataset}/{variable}/geotiff_metrics_timeseries.csv")
+    idr_iqr['datetime'] = pd.to_datetime(idr_iqr['datetime'])
     
+    timeseries_df = pd.DataFrame(timeseries, columns=['datetime', 'value'])
+    timeseries = timeseries_df.merge(idr_iqr, how='left', on='datetime')
+    timeseries['datetime'] = timeseries['datetime'] + pd.Timedelta(hours=12)
+
+    timeseries_with_stats = utils.create_timeseries_object(timeseries)
+    
+    timeseries_with_stats['stats']['altitude'] = altitude[-1]
+    
+    if timeseries_with_stats:
+        return utils.convert_float32(timeseries_with_stats)
+    else:
+        return make_response('', 204)
+    
+
+@app.route('/rasterStats', methods=['POST'])
+def getRasterStats():
+
+    '''
+    Get min, max and mean stats from a raster file
+    '''
+    request_data = request.get_json()
+    
+    dataset = request_data['dataset']
+    variable = request_data['variable']
+    layer_name = request_data['selectedLayerName']
+    
+    layer_fp = f"{GSA_DATAHUB_ROOT}/{dataset}/{variable}/{layer_name}.tif"
+    
+    if os.path.exists(layer_fp): 
+        
+        # Extract statistics
+        raster_stats = utils.get_raster_stats(layer_fp)
+        
+        raster_stats['layer'] = layer_name
+        raster_stats['dataset'] = dataset
+        
+        return utils.convert_float32(raster_stats)
+    else:
+        return make_response(f'Raster file {layer_name} does not exist on the server', 204)
