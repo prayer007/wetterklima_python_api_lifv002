@@ -5,7 +5,7 @@ import datetime
 from processors import BaseGeoTIFFProcessor
 
 
-dataset = 'spartacus-v2-1m-1km'
+dataset = 'spartacus-v2-1y-1km'
 variable = 'SA'
 layerDate = datetime.datetime(2022,12,12,0,0,0)
 lat = 47

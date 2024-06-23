@@ -236,7 +236,8 @@ def get_timeseries_from_dataset(dataset: str, variable: str, lat: float, lng: fl
         if variable == 'SA':
             if month is not None:
                 results_processed_sorted = [(date, duration / 3600 / 30) for date, duration in results_processed_sorted]
-            
+            else:
+                results_processed_sorted = [(date, duration / 3600 / 30 / 12) for date, duration in results_processed_sorted]   
     else:
         return None
         
