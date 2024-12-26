@@ -1,6 +1,6 @@
 import requests
 import json
-import datetime
+import reqs
 
 #%% Host
 host = 'http://143.224.185.119:5002'
@@ -36,3 +36,11 @@ if x.status_code == 200:
 else:
     print(f"ERROR: {x.status_code}")
 
+#%% get annual comparison
+station_id = 11035
+variable = "TL"
+period = "d"
+
+res = reqs.fetch_annual_comparison_data(station_id, variable, period)[0]
+
+data = res['data']
