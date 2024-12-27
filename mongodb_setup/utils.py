@@ -19,7 +19,7 @@ def create_annual_comparison_collection(db, indexes=None):
     # Define JSON schema for validation
     schema = {
         "bsonType": "object",
-        "required": ["station_id", "station_id_source", "variable", "variable_name_source", "period", "period_source", "data"],
+        "required": ["station_id", "station_id_source", "variable", "variable_source", "period", "period_source", "data"],
         "properties": {
             "station_id": {
                 "bsonType": "int",
@@ -33,7 +33,7 @@ def create_annual_comparison_collection(db, indexes=None):
                 "bsonType": "string",
                 "description": "Variable name at the target station."
             },
-            "variable_name_source": {
+            "variable_source": {
                 "bsonType": "string",
                 "description": "Variable name at the source station."
             },
@@ -116,10 +116,10 @@ def create_annual_comparison_collection(db, indexes=None):
     unique_index_name = "station_variable_period_source_unique"
     if unique_index_name not in [i["name"] for i in collection.list_indexes()]:
         collection.create_index(
-            [("station_id", 1), ("station_id_source", 1), ("variable", 1), ("variable_name_source", 1), ("period", 1)],
+            [("station_id", 1), ("station_id_source", 1), ("variable", 1), ("variable_source", 1), ("period", 1)],
             unique=True,
             name=unique_index_name
         )
-        print("Unique index on ('station_id', 'station_id_source', 'variable', 'variable_name_source', 'period') created.")
+        print("Unique index on ('station_id', 'station_id_source', 'variable', 'variable_source', 'period') created.")
     else:
-        print("Unique index on ('station_id', 'station_id_source', 'variable', 'variable_name_source', 'period') already exists.")
+        print("Unique index on ('station_id', 'station_id_source', 'variable', 'variable_source', 'period') already exists.")

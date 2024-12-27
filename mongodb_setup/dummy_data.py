@@ -58,7 +58,7 @@ def generate_dummy_data_annual_comparison(db, station_id=11035, station_id_sourc
                 "station_id": station_id,
                 "station_id_source": station_id_source,
                 "variable": variable,
-                "variable_name_source": variable_source,
+                "variable_source": variable_source,
                 "period": period,
                 "period_source": period_source,
                 "data": data
