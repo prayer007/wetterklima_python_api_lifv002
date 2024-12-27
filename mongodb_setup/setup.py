@@ -16,4 +16,4 @@ if __name__ == "__main__":
         ]
     )
 
-    dummy_data.generate_dummy_data_annual_comparison(db, station_id=11035)
+    # dummy_data.generate_dummy_data_annual_comparison(db, station_id=11035)
