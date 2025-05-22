@@ -33,7 +33,12 @@ class BaseGeoTIFFProcessor:
         filtered_files = []
         for file_path in all_files:
             filename = os.path.basename(file_path)
-            date_part = filename.split('.')[-2].split("_")[-1]
+            
+            if "CLIM" in filename:
+                date_part = filename.split('_')[-3]
+            else:
+                date_part = filename.split('.')[-2].split("_")[-1]
+                
             file_month = int(date_part[4:6])
             file_day = int(date_part[6:8])
             

@@ -14,26 +14,48 @@ import processors
 GSA_DATAHUB_ROOT = "/home/shared/CRM/11_gsa_datahub/"
 
 
-def get_raster_stats(raster_path):
+def get_raster_stats(raster_path, variable, dataset):
     """
     Extract minimum, maximum, and mean statistics from a raster file.
-    
+    If the variable is "SA", convert the extracted min, max, and mean values 
+    to sunshine hours per day based on the dataset period.
+
     Parameters:
     raster_path (str): Path to the raster file.
-    
+    variable (str): The variable name (e.g., "SA").
+    dataset (str): The dataset name (e.g., "spartacus-v2-1d-1km").
+
     Returns:
     dict: A dictionary containing the minimum, maximum, and mean values of the raster data.
     """
     with rasterio.open(raster_path) as src:
-        data = src.read(1) 
+        data = src.read(1)
 
         if src.nodata is not None:
             data = data[data != src.nodata]
-        
+
         min_val = np.min(data)
         max_val = np.max(data)
         mean_val = np.mean(data)
-        
+
+        # Convert min, max, and mean for "SA" based on the dataset period
+        if variable == "SA":
+            if "1d" in dataset:
+                # Convert seconds per day to hours per day
+                min_val /= 3600
+                max_val /= 3600
+                mean_val /= 3600
+            elif "1m" in dataset:
+                # Convert seconds per month to hours per day (assuming 30 days per month)
+                min_val /= (3600 * 30)
+                max_val /= (3600 * 30)
+                mean_val /= (3600 * 30)
+            elif "1y" in dataset:
+                # Convert seconds per year to hours per day (assuming 365 days per year)
+                min_val /= (3600 * 365)
+                max_val /= (3600 * 365)
+                mean_val /= (3600 * 365)
+
         return {
             'min': min_val,
             'max': max_val,
@@ -66,24 +88,31 @@ def extract_date_category_from_dataset_name(ds_name: str) -> str:
 
 def convert_float32(data):
     """
-    Recursively converts all float32 numbers in a dictionary to Python's default float type.
+    Recursively converts all float32 numbers in a dictionary to Python's default float type,
+    and replaces NaN values with None for valid JSON serialization.
 
     Parameters
     ----------
-    data : dict
-        The dictionary potentially containing float32 values.
+    data : dict, list, or value
+        The data structure potentially containing float32 or NaN values.
 
     Returns
     -------
-    dict
-        The dictionary with all float32 values converted to float64.
+    dict, list, or value
+        The data structure with all float32 values converted to float and NaNs replaced with None.
     """
     if isinstance(data, dict):
         return {k: convert_float32(v) for k, v in data.items()}
     elif isinstance(data, list):
         return [convert_float32(v) for v in data]
-    elif isinstance(data, np.float32):
+    elif isinstance(data, np.floating):
+        if np.isnan(data):
+            return None
         return float(data)
+    elif isinstance(data, float):
+        if np.isnan(data):
+            return None
+        return data
     else:
         return data
 
@@ -239,6 +268,7 @@ def get_timeseries_from_dataset(dataset: str, variable: str, lat: float, lng: fl
             else:
                 results_processed_sorted = [(date, duration / 3600 / 30 / 12) for date, duration in results_processed_sorted]   
     else:
+        print(f"No data found for {dataset}/{variable} at lat: {lat}, lng: {lng}")
         return None
         
     return results_processed_sorted

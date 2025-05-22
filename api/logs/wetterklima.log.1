@@ -1,88 +1,34 @@
-2024-05-11 09:08:45,244 ERROR: Exception on /gridTimeseries [POST] [in /root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py:828]
+2025-05-22 12:55:35,519 ERROR: Exception on /gridTimeseries [POST] [in /root/apis/wetterklima/venv/lib/python3.12/site-packages/flask/app.py:875]
 Traceback (most recent call last):
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 1463, in wsgi_app
+  File "/root/apis/wetterklima/venv/lib/python3.12/site-packages/flask/app.py", line 1511, in wsgi_app
     response = self.full_dispatch_request()
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 872, in full_dispatch_request
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/apis/wetterklima/venv/lib/python3.12/site-packages/flask/app.py", line 919, in full_dispatch_request
     rv = self.handle_user_exception(e)
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 870, in full_dispatch_request
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/apis/wetterklima/venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
     rv = self.dispatch_request()
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 855, in dispatch_request
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/apis/wetterklima/venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
-  File "/root/apis/wetterklima/api/routes.py", line 124, in getGridTimeseries
-    timeseries_with_stats = utils.create_timeseries_object(timeseries)
-  File "/root/apis/wetterklima/utils.py", line 327, in create_timeseries_object
-  File "/root/apis/wetterklima/utils.py", line 264, in calculate_stats_for_timeseries
-    df['datetime'] = df['datetime'].apply(lambda x: x.strftime("%Y-%m-%d %H:%M:%S"))
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/pandas/core/series.py", line 2460, in idxmin
-    i = self.argmin(axis, skipna, *args, **kwargs)  # type: ignore[arg-type]
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/pandas/core/base.py", line 742, in argmin
-    return nanops.nanargmin(  # type: ignore[return-value]
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/pandas/core/nanops.py", line 91, in _f
-    raise TypeError(
-TypeError: reduction operation 'argmin' not allowed for this dtype
-2024-05-11 09:08:45,250 ERROR: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in /root/apis/wetterklima/api/routes.py:33]
-2024-05-11 18:32:47,611 ERROR: Exception on /gridTimeseries [POST] [in /root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py:828]
-Traceback (most recent call last):
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 1463, in wsgi_app
-    response = self.full_dispatch_request()
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 872, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 870, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 855, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
-  File "/root/apis/wetterklima/api/routes.py", line 124, in getGridTimeseries
-    timeseries_with_stats = utils.create_timeseries_object(timeseries)
-  File "/root/apis/wetterklima/utils.py", line 327, in create_timeseries_object
-  File "/root/apis/wetterklima/utils.py", line 264, in calculate_stats_for_timeseries
-    df['datetime'] = df['datetime'].apply(lambda x: x.strftime("%Y-%m-%d %H:%M:%S"))
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/pandas/core/series.py", line 2460, in idxmin
-    i = self.argmin(axis, skipna, *args, **kwargs)  # type: ignore[arg-type]
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/pandas/core/base.py", line 742, in argmin
-    return nanops.nanargmin(  # type: ignore[return-value]
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/pandas/core/nanops.py", line 91, in _f
-    raise TypeError(
-TypeError: reduction operation 'argmin' not allowed for this dtype
-2024-05-11 18:32:47,613 ERROR: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in /root/apis/wetterklima/api/routes.py:33]
-2024-05-18 07:40:32,073 ERROR: Exception on /gridTimeseries [POST] [in /root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py:828]
-Traceback (most recent call last):
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 1463, in wsgi_app
-    response = self.full_dispatch_request()
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 872, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 870, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 855, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
-  File "/root/apis/wetterklima/api/routes.py", line 99, in getGridTimeseries
-    layerDate = request_data['layerDate']
-KeyError: 'layerDate'
-2024-05-18 07:40:32,077 ERROR: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in /root/apis/wetterklima/api/routes.py:33]
-2024-05-18 07:40:38,891 ERROR: Exception on /gridTimeseries [POST] [in /root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py:828]
-Traceback (most recent call last):
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 1463, in wsgi_app
-    response = self.full_dispatch_request()
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 872, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 870, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 855, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
-  File "/root/apis/wetterklima/api/routes.py", line 99, in getGridTimeseries
-    layerDate = request_data['layerDate']
-KeyError: 'layerDate'
-2024-05-18 07:40:38,892 ERROR: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in /root/apis/wetterklima/api/routes.py:33]
-2024-05-18 07:41:31,202 ERROR: Exception on /gridTimeseries [POST] [in /root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py:828]
-Traceback (most recent call last):
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 1463, in wsgi_app
-    response = self.full_dispatch_request()
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 872, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 870, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "/root/apis/wetterklima/venv/lib/python3.8/site-packages/flask/app.py", line 855, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
-  File "/root/apis/wetterklima/api/routes.py", line 99, in getGridTimeseries
-    layerDate = request_data['layerDate']
-KeyError: 'layerDate'
-2024-05-18 07:41:31,203 ERROR: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in /root/apis/wetterklima/api/routes.py:33]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/apis/wetterklima/api/routes.py", line 117, in getGridTimeseries
+    required_params = ['dataset', 'variable', 'layerDate', 'lat', 'lng']
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/apis/wetterklima/venv/lib/python3.12/site-packages/pandas/io/parsers/readers.py", line 1026, in read_csv
+    return _read(filepath_or_buffer, kwds)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/apis/wetterklima/venv/lib/python3.12/site-packages/pandas/io/parsers/readers.py", line 620, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/apis/wetterklima/venv/lib/python3.12/site-packages/pandas/io/parsers/readers.py", line 1620, in __init__
+    self._engine = self._make_engine(f, self.engine)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/apis/wetterklima/venv/lib/python3.12/site-packages/pandas/io/parsers/readers.py", line 1880, in _make_engine
+    self.handles = get_handle(
+                   ^^^^^^^^^^^
+  File "/root/apis/wetterklima/venv/lib/python3.12/site-packages/pandas/io/common.py", line 873, in get_handle
+    handle = open(
+             ^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/shared/CRM/11_gsa_datahub//climate_data/statistics/spartacus-v2-1y-1km/TM/geotiff_metrics_timeseries.csv'
+2025-05-22 12:55:35,523 ERROR: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in /root/apis/wetterklima/api/routes.py:33]
