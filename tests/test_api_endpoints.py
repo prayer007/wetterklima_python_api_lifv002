@@ -39,7 +39,8 @@ class TestApiEndpoints:
                 'layerDate': test_date,
                 'lat': 47,
                 'lng': 15,
-                'climate': True
+                'climate': True,
+                'climate_period': '1991_2020'
             }
             logging.info(f"Testing grid timeseries with params: {params}")
             

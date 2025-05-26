@@ -126,9 +126,14 @@ def getGridTimeseries():
         lat = request_data['lat']
         lng = request_data['lng']
         climate = request_data.get('climate', False)
+        climatePeriod = request_data.get('climate_period', None)
 
         # Only prepend '/climate_data/' if climate is True
-        dataset_path = f"/climate_data/{dataset}" if climate else dataset
+        if climate == True:
+            dataset_path = f"/climate_data/{dataset}" 
+        else: 
+            dataset_path = dataset
+            climatePeriod = None
 
         layerDateCategory = utils.extract_date_category_from_dataset_name(dataset_path)
         layerDateDt = pd.to_datetime(layerDate) + pd.Timedelta(hours=12)
@@ -138,14 +143,14 @@ def getGridTimeseries():
         altitude = geotiff_processor.extract_value_from_geotiff((dem_fp, lat, lng))
 
         if layerDateCategory == 'd':
-            timeseries = utils.get_timeseries_from_dataset(dataset_path, variable, lat, lng, day=layerDateDt.day)
+            timeseries = utils.get_timeseries_from_dataset(dataset_path, variable, lat, lng, day=layerDateDt.day, climate_period=climatePeriod)
         elif layerDateCategory == 'm':
-            timeseries = utils.get_timeseries_from_dataset(dataset_path, variable, lat, lng, month=layerDateDt.month)
+            timeseries = utils.get_timeseries_from_dataset(dataset_path, variable, lat, lng, month=layerDateDt.month, climate_period=climatePeriod)
         else:
-            timeseries = utils.get_timeseries_from_dataset(dataset_path, variable, lat, lng)
+            timeseries = utils.get_timeseries_from_dataset(dataset_path, variable, lat, lng, climate_period=climatePeriod)
 
         # Build the correct path for idr_iqr file
-        if climate:
+        if climate == True:
             stats_fp = f"{GSA_DATAHUB_ROOT}/climate_data/statistics/{dataset}/{variable}/geotiff_metrics_timeseries.csv"
         else:
             stats_fp = f"{GSA_DATAHUB_ROOT}/statistics/{dataset}/{variable}/geotiff_metrics_timeseries.csv"
@@ -189,7 +194,8 @@ def getRasterStats():
         variable = request_data['variable']
         layer_name = request_data['selectedLayerName']
         climate = request_data.get('climate', False)
-        
+        climatePeriod = request_data.get('climate_period', None)
+
         climate_fp = "climate_data" if climate else ''
         layer_fp = f"{GSA_DATAHUB_ROOT}/{climate_fp}/{dataset}/{variable}/{layer_name}.tif"
         

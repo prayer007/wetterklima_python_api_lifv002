@@ -34,9 +34,9 @@ def get_raster_stats(raster_path, variable, dataset):
         if src.nodata is not None:
             data = data[data != src.nodata]
 
-        min_val = np.min(data)
-        max_val = np.max(data)
-        mean_val = np.mean(data)
+        min_val = np.nanmin(data)
+        max_val = np.nanmax(data)
+        mean_val = np.nanmean(data)
 
         # Convert min, max, and mean for "SA" based on the dataset period
         if variable == "SA":
@@ -216,7 +216,7 @@ def sort_tuple_array_by_datetime(array: list) -> list:
 
 
 @timeit
-def get_timeseries_from_dataset(dataset: str, variable: str, lat: float, lng: float, month = None, day = None) -> list:
+def get_timeseries_from_dataset(dataset: str, variable: str, lat: float, lng: float, month = None, day = None, climate_period = None) -> list:
     """
     Retrieves a time series of values from a dataset of GeoTIFF files for 
     a specific variable at given latitude and longitude coordinates.
@@ -257,6 +257,9 @@ def get_timeseries_from_dataset(dataset: str, variable: str, lat: float, lng: fl
 
     processor = processors.GeoTIFFThreadingProcessor(data_dir, month = month, day = day, threads = 4)
     results = processor.process_geotiffs('.tif', lat, lng)
+    
+    if climate_period is not None:
+        results = [res for res in results if climate_period in res[0]]
     
     if not all(res is None for res in results):
         results_processed = [(extract_datetime_from_filename(basename(res[0])),res[1]) for res in results]
