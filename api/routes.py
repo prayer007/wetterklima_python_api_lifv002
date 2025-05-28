@@ -158,6 +158,9 @@ def getGridTimeseries():
         idr_iqr = pd.read_csv(stats_fp)
         idr_iqr['datetime'] = pd.to_datetime(idr_iqr['datetime'])
 
+        if climate == True:
+            idr_iqr = idr_iqr[idr_iqr['climate_period'] == climatePeriod]
+
         timeseries_df = pd.DataFrame(timeseries, columns=['datetime', 'value'])
         timeseries = timeseries_df.merge(idr_iqr, how='left', on='datetime')
         timeseries['datetime'] = timeseries['datetime'] + pd.Timedelta(hours=12)

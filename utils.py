@@ -39,22 +39,22 @@ def get_raster_stats(raster_path, variable, dataset):
         mean_val = np.nanmean(data)
 
         # Convert min, max, and mean for "SA" based on the dataset period
-        if variable == "SA":
-            if "1d" in dataset:
-                # Convert seconds per day to hours per day
-                min_val /= 3600
-                max_val /= 3600
-                mean_val /= 3600
-            elif "1m" in dataset:
-                # Convert seconds per month to hours per day (assuming 30 days per month)
-                min_val /= (3600 * 30)
-                max_val /= (3600 * 30)
-                mean_val /= (3600 * 30)
-            elif "1y" in dataset:
-                # Convert seconds per year to hours per day (assuming 365 days per year)
-                min_val /= (3600 * 365)
-                max_val /= (3600 * 365)
-                mean_val /= (3600 * 365)
+        # if variable == "SA":
+        #     if "1d" in dataset:
+        #         # Convert seconds per day to hours per day
+        #         min_val /= 3600
+        #         max_val /= 3600
+        #         mean_val /= 3600
+        #     elif "1m" in dataset:
+        #         # Convert seconds per month to hours per day (assuming 30 days per month)
+        #         min_val /= (3600 * 30)
+        #         max_val /= (3600 * 30)
+        #         mean_val /= (3600 * 30)
+        #     elif "1y" in dataset:
+        #         # Convert seconds per year to hours per day (assuming 365 days per year)
+        #         min_val /= (3600 * 365)
+        #         max_val /= (3600 * 365)
+        #         mean_val /= (3600 * 365)
 
         return {
             'min': min_val,
@@ -264,12 +264,11 @@ def get_timeseries_from_dataset(dataset: str, variable: str, lat: float, lng: fl
     if not all(res is None for res in results):
         results_processed = [(extract_datetime_from_filename(basename(res[0])),res[1]) for res in results]
         results_processed_sorted = sort_tuple_array_by_datetime(results_processed)
-        #TODO: add SA transformation here
-        if variable == 'SA':
-            if month is not None:
-                results_processed_sorted = [(date, duration / 3600 / 30) for date, duration in results_processed_sorted]
-            else:
-                results_processed_sorted = [(date, duration / 3600 / 30 / 12) for date, duration in results_processed_sorted]   
+        # if variable == 'SA':
+        #     if month is not None:
+        #         results_processed_sorted = [(date, duration / 3600 / 30) for date, duration in results_processed_sorted]
+        #     else:
+        #         results_processed_sorted = [(date, duration / 3600 / 30 / 12) for date, duration in results_processed_sorted]   
     else:
         print(f"No data found for {dataset}/{variable} at lat: {lat}, lng: {lng}")
         return None
